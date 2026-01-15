@@ -2,8 +2,7 @@
 
 A RESTful API built with Node.js, Express, and PostgreSQL for managing clients and their associated phone numbers.
 
-This project was developed to demonstrate backend engineering skills, including API design, database modeling, validation, testing, and CI workflows, following real-world backend practices. Have to say, this is my first time doing this, and i think of doing a more projects like this with wider, more complex databases in a near future
-
+This project was developed to demonstrate backend engineering skills, including API design, database modeling, validation, testing, and CI workflows, following real-world backend practices. It also served as a hands-on learning project to strengthen my understanding of backend architecture and relational database design, with the intention of expanding to more complex systems in future projects.
 
 ---
 
@@ -34,7 +33,7 @@ This repository was built to practice and demonstrate the following abilities:
 
 ### Key features
 
-- Clients CRUD
+- Client CRUD operations
 - Phone numbers management
     * Add single or multiple phone numbers
     * Delete individual numbers or all numbers for a client
@@ -65,7 +64,7 @@ This repository was built to practice and demonstrate the following abilities:
     ├── middlewares/    # Error handling and shared logic
     ├── errors/         # Custom application errors
     ├── routes/         # API routes
-    ├── db/             # 
+    ├── db/             # Database connection and pool configuration
     └── app.js
 
 This structure mirrors common backend architectures used in production systems.
@@ -106,14 +105,14 @@ Tests are executed locally and automatically through GitHub Actions on every pus
 
 ### Notes for reviewers
 
-This project was built from scratch without generators
-SQL queries are written manually to demonstrate database understanding
-Error handling and validations are intentionally explicit
-The focus is on code quality, structure, and correctness
+- This project was built from scratch without generators
+- SQL queries are written manually to demonstrate database understanding
+- Error handling and validations are intentionally explicit
+- The focus is on code quality, structure, and correctness
 
 ---
 
 ### Project status
 
 This project is in constant improvement and serves as a backend-focused portfolio piece.
-Future improvements may include font-end side, authentication, role-based access, or API documentation (OpenAPI).
+Future improvements may include font-end application, authentication, role-based access, or API documentation (OpenAPI).
