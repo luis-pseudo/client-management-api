@@ -26,6 +26,29 @@ describe('GET /clients', () => {
   })
 })
 
+describe('GET /clients/phones', () => {
+  it('should return clients with their phone numbers grouped', async () => {
+    const res = await request(app).get('/clients/phones')
+
+    expect(res.statusCode).toBe(200)
+    expect(Array.isArray(res.body)).toBe(true)
+
+    if (res.body.length > 0) {
+      const client = res.body[0]
+
+      expect(client).toHaveProperty('id')
+      expect(client).toHaveProperty('name')
+      expect(client).toHaveProperty('email')
+      expect(client).toHaveProperty('phones')
+
+      expect(typeof client.id).toBe('number')
+      expect(typeof client.name).toBe('string')
+      expect(typeof client.email).toBe('string')
+      expect(Array.isArray(client.phones)).toBe(true)
+    }
+  })
+})
+
 describe('POST /clients', () => {
 
   it('should create a new client and return its id', async () => {

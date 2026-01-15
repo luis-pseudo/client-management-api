@@ -4,11 +4,11 @@ const { validateIdParam, validatePhonesBody, validateCreateClient, validateUpdat
 
 const clientsController = require('../controllers/clients.controller');
 
-router.get('/', validatePagination, clientsController.getClients);
-router.get('/phones', clientsController.getClientsWithPhones);
-router.post('/', validateCreateClient, clientsController.createClient);
+router.get('/', validatePagination, clientsController.getClients); //tested
+router.get('/phones', clientsController.getClientsWithPhones); //tested
+router.post('/', validateCreateClient, clientsController.createClient); //tested
 router.post('/:id/phones', validateIdParam, validatePhonesBody, clientsController.addPhones)
-router.put('/:id', validateIdParam, validateUpdateClient, clientsController.updateClient);
+router.put('/:id', validateIdParam, validateUpdateClient, clientsController.updateClient); //tested
 router.delete('/:id/phones/:number', validateIdParam, validatePhoneParam, clientsController.deletePhones);
 router.delete('/:id/phones', validateIdParam, clientsController.deleteAllPhones);
 router.delete('/:id', validateIdParam, clientsController.deleteClient);
