@@ -93,6 +93,7 @@ async function createClient(data) {
   } 
   catch (error) {
     await client.query('ROLLBACK');
+    if (error.code === '23505') throw new AppError('Duplicated email', 409)
     throw error;
   }
   finally{
