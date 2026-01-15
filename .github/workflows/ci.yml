@@ -35,15 +35,15 @@ jobs:
 
       - run: npm install
 
-	- name: Setup database schema
-	  env:
-	    DB_HOST: localhost
-	    DB_PORT: 5432
-	    DB_USER: test
-	    DB_PASSWORD: test
-	    DB_NAME: testdb
-	  run: |
-	    psql postgresql://test:test@localhost:5432/testdb < sql/schema.sql
+      - name: Setup database schema
+        env:
+          DB_HOST: localhost
+          DB_PORT: 5432
+          DB_USER: test
+          DB_PASSWORD: test
+          DB_NAME: testdb
+        run: |
+          psql postgresql://test:test@localhost:5432/testdb < sql/schema.sql
 
       - name: Run tests
         env:
