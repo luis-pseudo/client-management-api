@@ -294,3 +294,54 @@ describe('DELETE /clients/:id/phones/:number', ()=>{
     await deleteTestClient(clientId)
     })
 })
+
+describe('DELETE /clients/:id/phones', ()=>{
+    it('should delete all rows for the specific id and return deleted numbers', async ()=>{
+        const testClient= await createTestClient({name: "test buddy", email: `delete_phone_${Date.now()}@test.com`, state:true, phones:['132-4875', '666-2357', '112-3581']})
+
+        const res=await request(app).delete(`/clients/${testClient}/phones`)
+
+        expect(res.status).toBe(200)
+        expect(res.body).toHaveProperty('deleted')
+        expect(res.body).toHaveProperty('numbers')
+        expect(res.body).toHaveProperty('message')
+        expect(typeof res.body.deleted).toBe('number')
+        expect(Array.isArray(res.body.numbers)).toBe(true)
+        expect(typeof res.body.message).toBe('string')
+        expect(res.body.deleted).toBe(3)
+        expect(res.body.numbers.length).toBe(3)
+        expect(res.body.numbers[0]).toBeDefined()
+
+        await deleteTestClient(testClient)
+    })
+    it('should return 0 numbers deleted if the client had no linked numbers', async ()=>{
+        const testClient= await createTestClient({name: "test buddy", email: `delete_phone_${Date.now()}@test.com`, state:true, phones:['132-4875']})
+        await request(app).delete(`/clients/${testClient}/phones`)
+
+        const res=await request(app).delete(`/clients/${testClient}/phones`)
+
+        expect(res.status).toBe(200)
+        expect(res.body).toHaveProperty('deleted')
+        expect(res.body).toHaveProperty('numbers')
+        expect(res.body).toHaveProperty('message')
+        expect(typeof res.body.deleted).toBe('number')
+        expect(Array.isArray(res.body.numbers)).toBe(true)
+        expect(typeof res.body.message).toBe('string')
+        expect(res.body.deleted).toBe(0)
+        expect(res.body.numbers.length).toBe(0)
+
+        await deleteTestClient(testClient)
+    })
+    it('should return 404 if the client was not found', async ()=>{
+        const res=await request(app).delete('/clients/99999/phones')
+
+        expect(res.status).toBe(404)
+        expect(res.body).toHaveProperty('error')
+    })
+    it('should return 400 if the id is invalid', async ()=>{
+        const res=await request(app).delete('/clients/true/phones')
+
+        expect(res.status).toBe(400)
+        expect(res.body).toHaveProperty('error')
+    })
+})
