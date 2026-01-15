@@ -230,3 +230,67 @@ describe('PUT /clients/:id', () =>{
     expect(res.statusCode).toBe(400)
     })
 })
+
+describe('DELETE /clients/:id/phones/:number', ()=>{
+    it('should delete the specified number and return deleted: true and the deleted number', async ()=>{
+        const testClient=await createTestClient({name: "test buddy", email: `delete_phone_${Date.now()}@test.com`, state: true, phones:['724-7216']})
+        console.log(testClient)
+
+        const res=await request(app).delete(`/clients/${testClient}/phones/724-7216`)
+
+        expect(res.status).toBe(200)
+        expect(res.body).toHaveProperty('deleted')
+        expect(res.body).toHaveProperty('number')
+        expect(res.body).toHaveProperty('message')
+        expect(typeof res.body.deleted).toBe('boolean')
+        expect(res.body.deleted).toBe(true)
+        expect(typeof res.body.number).toBe('string')
+        expect(typeof res.body.message).toBe('string')
+        expect(res.body.number).toBe('724-7216')
+
+        await deleteTestClient(testClient)
+    })
+    it('should return 404 if the client is not found', async ()=>{
+        const res=await request(app).delete('/clients/99999/phones/555-2222')
+
+        expect(res.status).toBe(404)
+        expect(res.body).toHaveProperty('error')
+        expect(res.body.error).toBe('Client not found')
+    })
+    it('should return 404 when the number is not found', async ()=>{
+        const testClient=await createTestClient({name: "test buddy", email: `delete_phone_${Date.now()}@test.com`, state: true, phones:['142-5236']})
+
+        const res=await request(app).delete(`/clients/${testClient}/phones/987-7415`)
+
+        expect(res.status).toBe(404)
+        expect(res.body).toHaveProperty('error')
+        expect(res.body.error).toBe('Number not found')
+
+        await deleteTestClient(testClient)
+    })
+    it('should return 400 if an invalid parameter is sent', async ()=>{
+        const res=await request(app).delete('/clients/true/phones/notanumber')
+
+        expect(res.status).toBe(400)
+        expect(res.body).toHaveProperty('error')
+    })
+    it('should return 404 when deleting an already deleted number', async () => {
+    const clientId = await createTestClient({
+        name: 'test buddy',
+        email: `double_delete_${Date.now()}@test.com`,
+        state: true,
+        phones: ['111-2222']
+    })
+
+    await request(app)
+        .delete(`/clients/${clientId}/phones/111-2222`)
+
+    const res = await request(app)
+        .delete(`/clients/${clientId}/phones/111-2222`)
+
+    expect(res.status).toBe(404)
+    expect(res.body).toHaveProperty('error')
+
+    await deleteTestClient(clientId)
+    })
+})
