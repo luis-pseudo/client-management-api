@@ -105,6 +105,57 @@ describe('POST /clients', () => {
   })
 })
 
+describe('POST /clients/phones', ()=>{
+    it('should insert new phones and return "added" as a numeric value', async ()=>{
+        const testClient=await createTestClient({name: 'test buddy', email:'newtestemailihopedoesntexistalready@address.me', phones:["612-4312"], state: true})
+
+        const res=await request(app)
+            .post(`/clients/${testClient}/phones`)
+            .send({phones: ['134-5315', '513-5123']})
+
+        expect(res.status).toBe(201)
+        expect(res.body).toHaveProperty('added')
+        expect(res.body).toHaveProperty('message')
+        expect(typeof res.body.added).toBe('number')
+        expect(typeof res.body.message).toBe('string')
+        expect(res.body.added).toBe(2)
+
+        await deleteTestClient(testClient)
+    })
+    it('should return 400 when sending an empty array', async ()=>{
+        const testClient=await createTestClient({name: 'test buddy', email:'newtestemailihopedoesntexistalready@address.me', phones:[], state: true})
+
+        const res=await request(app)
+            .post(`/clients/${testClient}/phones`)
+            .send({phones:[]})
+        
+        expect(res.status).toBe(400)
+        expect(res.body).toHaveProperty('error')
+
+        deleteTestClient(testClient)
+    })
+    it('should return 400 when sending wrong fields', async ()=>{
+        const testClient=await createTestClient({name: 'test buddy', email:'newtestemailihopedoesntexistalready@address.me', phones:[], state: true})
+
+        const res=await request(app)
+            .post(`/clients/${testClient}/phones`)
+            .send({wrongfield:"hi"})
+
+        expect(res.status).toBe(400)
+        expect(res.body).toHaveProperty('error')
+
+        deleteTestClient(testClient)
+    })
+    it('should return 404 when client not found', async ()=>{
+        const res=await request(app)
+            .post('/clients/99999/phones')
+            .send({phones: ["492-5401"]})
+
+        expect(res.status).toBe(404)
+        expect(res.body).toHaveProperty('error')
+    })
+})
+
 describe('PUT /clients/:id', () =>{
     it('should update sent client fields and return updated: true', async ()=>{
         const testValues={

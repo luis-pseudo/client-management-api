@@ -7,7 +7,7 @@ const clientsController = require('../controllers/clients.controller');
 router.get('/', validatePagination, clientsController.getClients); //tested
 router.get('/phones', clientsController.getClientsWithPhones); //tested
 router.post('/', validateCreateClient, clientsController.createClient); //tested
-router.post('/:id/phones', validateIdParam, validatePhonesBody, clientsController.addPhones)
+router.post('/:id/phones', validateIdParam, validatePhonesBody, clientsController.addPhones) //tested
 router.put('/:id', validateIdParam, validateUpdateClient, clientsController.updateClient); //tested
 router.delete('/:id/phones/:number', validateIdParam, validatePhoneParam, clientsController.deletePhones);
 router.delete('/:id/phones', validateIdParam, clientsController.deleteAllPhones);
